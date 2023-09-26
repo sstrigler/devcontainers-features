@@ -1,7 +1,7 @@
 {
     "name": "asdf package",
     "id": "asdf-package",
-    "version": "1.0.8",
+    "version": "1.0.8-1",
     "description": "Installs an asdf package.",
     "documentationURL": "http://github.com/devcontainers-contrib/features/tree/main/src/asdf-package",
     "installsAfter": [
@@ -41,6 +41,14 @@
             ],
             "default": "",
             "description": "this will be used as argument for 'asdf latest <plugin> <latestVersionPattern>' command. If none given the default asdf of '[0-9]' will be used."
+        },
+        "otp_github_url": {
+            "type": "string",
+            "proposals": [
+                "https://github.com/foo/bar"
+            ],
+            "default": "",
+            "description": "Select the got repo to install erlang otp from"
         }
     }
 }
