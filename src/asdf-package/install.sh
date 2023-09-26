@@ -7,6 +7,7 @@ PLUGIN=${PLUGIN:-""}
 VERSION=${VERSION:-"latest"}
 PLUGINREPO=${PLUGINREPO:-""}
 LATESTVERSIONPATTERN=${LATESTVERSIONPATTERN:-""}
+OTP_GITHUB_URL=${OTP_GITHUB_URL:-""}
 
 # Clean up
 rm -rf /var/lib/apt/lists/*
@@ -62,7 +63,7 @@ install_via_asdf() {
 	elif cat /etc/os-release | grep  "ID_LIKE=.*debian.*\|ID=.*debian.*"; then
 		check_packages curl git ca-certificates
 	fi
-	
+
 
 	# asdf may be installed somewhere on the machine, but we need it to be accessible to the remote user
 	# the code bellow will return 2 only when asdf is available, and 1 otherwise
@@ -75,7 +76,7 @@ install_via_asdf() {
 EOF
 	exit_code=$?
 	set -e
-	
+
 	if [ "${exit_code}" -eq 2 ]; then
 		# asdf already available to remote user, use it
 		su - "$_REMOTE_USER" <<EOF
@@ -83,7 +84,7 @@ EOF
 			if asdf list "$PLUGIN" >/dev/null 2>&1; then
 				echo "$PLUGIN  already exists - skipping adding it"
 			else
-				asdf plugin add "$PLUGIN" "$REPO" 
+				asdf plugin add "$PLUGIN" "$REPO"
 			fi
 
  			if [ "${VERSION}" = "latest" ] ; then
@@ -112,15 +113,15 @@ EOF
 			if asdf list "$PLUGIN" >/dev/null 2>&1; then
 				echo "$PLUGIN  already exists - skipping adding it"
 			else
-				asdf plugin add "$PLUGIN" "$REPO" 
+				asdf plugin add "$PLUGIN" "$REPO"
 			fi
-			
+
 EOF
 
 
-		# I resolve the version like this because in bash resolving 
+		# I resolve the version like this because in bash resolving
 		# a subshell take prevedent to su, so we must resolve variables
-		# pre using them in final su clause. 
+		# pre using them in final su clause.
 		# I hate bash.
 		resolved_version=$(su - "$_REMOTE_USER" <<EOF
 			. $_REMOTE_USER_HOME/.asdf/asdf.sh > /dev/null 2>&1
@@ -131,7 +132,7 @@ EOF
 				echo $VERSION
 			fi
 EOF
-)		
+)
 		su - "$_REMOTE_USER" <<EOF
 			. $_REMOTE_USER_HOME/.asdf/asdf.sh
 			asdf install "$PLUGIN" "$resolved_version"
@@ -139,7 +140,7 @@ EOF
 
 EOF
 		updaterc ". $_REMOTE_USER_HOME/.asdf/asdf.sh"
-	fi 
+	fi
 }
 
 install_via_asdf "$PLUGIN" "$VERSION" "$PLUGINREPO"
